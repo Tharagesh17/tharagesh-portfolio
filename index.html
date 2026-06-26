@@ -201,6 +201,41 @@
   .stat-value { font-size: 2rem; font-weight: 800; font-family: var(--display); }
   .stat-label { font-size: 13px; color: var(--text-muted); }
 
+  /* ── SERVICES ── */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+  }
+  .service-card {
+    background: var(--glass);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 1.6rem;
+    backdrop-filter: blur(18px);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 18px 42px rgba(0,0,0,0.25);
+  }
+  .service-label {
+    color: var(--red);
+    font-family: var(--display);
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    margin-bottom: 0.8rem;
+  }
+  .service-title {
+    font-family: var(--display);
+    font-size: 1.35rem;
+    font-weight: 800;
+    margin-bottom: 0.7rem;
+  }
+  .service-desc {
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
   /* ── PROJECTS ── */
   .projects-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2.5rem; }
   .projects-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
@@ -374,6 +409,7 @@
     .nav-links { display: none; }
     #hero { grid-template-columns: 1fr; padding-top: 6rem; gap: 3rem; }
     .stats-grid { grid-template-columns: repeat(3, 1fr); }
+    .services-grid { grid-template-columns: 1fr; }
     .projects-grid { grid-template-columns: 1fr 1fr; }
     #about { grid-template-columns: 1fr; }
     .about-img-wrapper { display: none; }
@@ -402,6 +438,7 @@
   <ul class="nav-links">
     <li><a href="#hero" class="active">Home</a></li>
     <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
     <li><a href="#projects">Projects</a></li>
     <li><a href="#skills">Skills</a></li>
     <li><a href="#experience">Experience</a></li>
@@ -414,10 +451,10 @@
 <!-- HERO -->
 <section id="hero">
   <div class="hero-left reveal">
-    <div class="hero-roles">AI Engineer &nbsp;|&nbsp; Agent Developer &nbsp;|&nbsp; Founder</div>
+    <div class="hero-roles">AI Engineer &nbsp;|&nbsp; Agent Developer &nbsp;|&nbsp; Web Developer</div>
     <h1 class="hero-name">THARAGESH <span>A</span></h1>
-    <p class="hero-tagline">Building AI Agents That<br><span class="highlight">Think, Act &amp; Automate.</span></p>
-    <p class="hero-desc">I build intelligent systems and AI agents that automate workflows, solve real-world problems and drive impact.</p>
+    <p class="hero-tagline">Building AI Agents &amp; Websites That<br><span class="highlight">Automate, Convert &amp; Scale.</span></p>
+    <p class="hero-desc">I build AI agents that automate business workflows and modern websites that help brands launch, sell and grow online.</p>
     <div class="hero-btns">
       <a href="#projects" class="btn-primary">View My Work →</a>
       <a href="assets/Tharagesh_Resume.pdf" download class="btn-secondary">Download Resume</a>
@@ -500,6 +537,24 @@
     </div>
   </div>
 </div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-label reveal">Services</div>
+  <h2 class="reveal" style="font-family:var(--display);font-size:2.2rem;font-weight:800;margin-bottom:0.5rem;">What I Can Build For You</h2>
+  <div class="services-grid">
+    <div class="service-card reveal">
+      <div class="service-label">AI AUTOMATION</div>
+      <div class="service-title">Business Automation With AI Agents</div>
+      <p class="service-desc">I build agents that automate CRM workflows, lead follow-ups, email handling, customer support, calendar tasks, internal knowledge search and repetitive business operations.</p>
+    </div>
+    <div class="service-card reveal" style="transition-delay:0.1s">
+      <div class="service-label">WEB DEVELOPMENT</div>
+      <div class="service-title">Websites For Brands, Startups & Businesses</div>
+      <p class="service-desc">I build responsive portfolio sites, landing pages, business websites, SaaS frontends and full-stack web apps with clean design, fast performance and conversion-focused structure.</p>
+    </div>
+  </div>
+</section>
 
 <!-- PROJECTS -->
 <section id="projects">
@@ -618,9 +673,9 @@
   <div class="reveal" style="transition-delay:0.15s">
     <div class="section-label">About Me</div>
     <h2 class="about-h2">Passionate about building <span>intelligent systems</span></h2>
-    <p class="about-p">I'm a Computer Science fresher from Puducherry with a deep focus on AI agent frameworks, full-stack development, and building production-ready autonomous systems.</p>
+    <p class="about-p">I'm a Computer Science fresher from Puducherry with a deep focus on AI agent frameworks, full-stack development, website building, and production-ready automation systems.</p>
     <p class="about-p">I founded AgentHelm — an AI agent governance and observability SDK — currently available on PyPI and npm, used for monitoring and controlling autonomous AI agents in production.</p>
-    <p class="about-p">Open to AI Engineer and Full Stack Developer roles in Chennai, Bangalore, Hyderabad, or remotely.</p>
+    <p class="about-p">Open to AI Engineer, Full Stack Developer, website development and AI automation freelance opportunities in Chennai, Bangalore, Hyderabad, or remotely.</p>
     <div class="about-highlights">
       <div class="highlight-item"><span class="highlight-dot"></span><span class="highlight-text">LangGraph & LangChain agent development</span></div>
       <div class="highlight-item"><span class="highlight-dot"></span><span class="highlight-text">FastAPI & Next.js full-stack apps</span></div>
@@ -668,9 +723,9 @@
     <div class="exp-item reveal">
       <div class="exp-period">2025 — Present</div>
       <div>
-        <div class="exp-role">AI Automation Freelancer</div>
+        <div class="exp-role">AI Automation & Web Development Freelancer</div>
         <div class="exp-company">Independent</div>
-        <div class="exp-desc">Building a portfolio of 15 AI automation projects: customer support agents, RAG chatbots, recruitment agents, multi-agent business systems using LangGraph, and AI SaaS applications. Focused on acquiring real clients with measurable ROI.</div>
+        <div class="exp-desc">Building AI automation systems, business agents, RAG chatbots, recruitment agents, CRM workflows, modern websites, landing pages and full-stack web apps for clients. Focused on helping businesses save time, automate operations and improve their online presence.</div>
       </div>
     </div>
     <div class="exp-item reveal">
@@ -721,7 +776,7 @@
 <section id="contact">
   <div class="section-label">Contact</div>
   <h2 class="contact-h2 reveal">Let's Build Something Amazing</h2>
-  <p class="contact-sub reveal">I'm always open to discussing new projects, creative ideas, freelance opportunities, or full-time roles.</p>
+  <p class="contact-sub reveal">Need an AI agent to automate your business or a website to grow your online presence? I'm open to freelance projects, creative ideas and full-time roles.</p>
   <div class="contact-links reveal">
     <a href="https://linkedin.com/in/tharagesh" target="_blank" class="contact-btn primary">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
