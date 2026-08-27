@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: portfolio-agents
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
+    envVars:
+      - key: SARVAM_API_KEY
+        sync: false   # paste your key in the Render dashboard (never commit it)
