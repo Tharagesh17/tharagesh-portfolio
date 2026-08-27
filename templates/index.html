@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tharagesh A — Provenance Ledger</title>
+<meta name="description" content="Tharagesh A — AI/ML engineer & solo founder of AgentHelm. A provenance ledger of shipped agents, governance tooling, and research.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F5F6F3; --ink:#14181C; --muted:#5C6570; --hairline:#DEE2DF;
+  --seal:#B8862E; --seal-wash:#F3ECDD;
+  --ledger:#2E6B57; --ledger-wash:#E4EFEA;
+  --rail-w:248px;
+  --shadow:0 1px 2px rgba(20,24,28,.04),0 8px 24px rgba(20,24,28,.05);
+  --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
+  line-height:1.62;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+::selection{background:var(--seal);color:#fff}
+a{color:var(--seal);text-decoration:none}
+img{max-width:100%;display:block}
+h1,h2,h3,h4{font-family:var(--serif);font-weight:600;letter-spacing:-.012em;color:var(--ink);margin:0}
+
+/* ---------- layout ---------- */
+.shell{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:var(--rail-w) 1fr}
+.rail{position:sticky;top:0;align-self:start;height:100vh;overflow-y:auto;
+  border-right:1px solid var(--hairline);padding:28px 20px 40px;background:var(--paper)}
+.main{padding:0 0 80px;min-width:0}
+
+/* ---------- rail (audit log) ---------- */
+.rail-head{font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--muted);
+  text-transform:uppercase;margin-bottom:6px}
+.rail-title{font-family:var(--serif);font-size:18px;font-weight:600;margin:0 0 2px}
+.rail-sub{font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:22px}
+.rail-list{list-style:none;margin:0;padding:0;position:relative}
+.rail-list::before{content:"";position:absolute;left:6px;top:6px;bottom:6px;width:1px;background:var(--hairline)}
+.rail-item{position:relative;padding:9px 0 9px 26px;cursor:pointer;opacity:.62;transition:opacity .25s}
+.rail-item::before{content:"";position:absolute;left:3px;top:14px;width:7px;height:7px;border-radius:50%;
+  background:var(--paper);border:1.5px solid var(--hairline);transition:all .25s}
+.rail-item:hover{opacity:1}
+.rail-item.active{opacity:1}
+.rail-item.active::before{background:var(--seal);border-color:var(--seal)}
+.rail-item .h{font-family:var(--mono);font-size:11px;color:var(--ink);display:block;line-height:1.3}
+.rail-item .t{font-family:var(--mono);font-size:10.5px;color:var(--muted);display:block;margin-top:1px}
+.rail-item .s{font-family:var(--mono);font-size:10px;font-weight:500;display:inline-block;margin-top:3px}
+.s-verified{color:var(--seal)} .s-shipped{color:var(--ledger)} .s-review{color:var(--muted)}
+
+/* ---------- entries ---------- */
+.entry{padding:56px 48px;border-bottom:1px solid var(--hairline);position:relative}
+.entry:last-child{border-bottom:none}
+.entry-head{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+.hash{font-family:var(--mono);font-size:12px;background:var(--ink);color:var(--paper);
+  padding:3px 9px;border-radius:5px;letter-spacing:.02em}
+.stamp{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.status{font-family:var(--mono);font-size:11px;font-weight:500;text-transform:uppercase;
+  letter-spacing:.06em;padding:3px 10px;border-radius:980px;border:1px solid transparent}
+.status.verified{color:var(--seal);background:var(--seal-wash);border-color:#E6D6B4}
+.status.shipped{color:var(--ledger);background:var(--ledger-wash);border-color:#C5DBD0}
+.status.review{color:var(--muted);background:transparent;border-color:var(--hairline)}
+.entry h2.title{font-size:clamp(26px,3.4vw,38px);line-height:1.1;margin:0 0 6px}
+.entry .thesis{font-family:var(--serif);font-style:italic;font-size:17px;color:var(--muted);
+  margin:0 0 22px;max-width:680px}
+.entry p{font-size:16.5px;margin:0 0 16px;max-width:720px;color:var(--ink)}
+.entry p.muted{color:var(--muted)}
+
+/* identity block (photo) */
+.idblock{display:flex;gap:18px;align-items:center;margin:20px 0 4px;padding:16px;border:1px solid var(--hairline);
+  border-radius:12px;background:var(--paper);max-width:520px}
+.idblock img{width:84px;height:84px;border-radius:10px;object-fit:cover;object-position:center 28%;
+  border:1px solid var(--hairline);flex:none}
+.idblock .who .n{font-family:var(--serif);font-size:17px;font-weight:600}
+.idblock .who .r{font-family:var(--mono);font-size:11.5px;color:var(--seal);margin-top:2px}
+.idblock .who .l{font-size:13px;color:var(--muted);margin-top:3px}
+@media(max-width:520px){ .idblock{margin-left:0} }
+
+/* commit-style meta line */
+.commit{font-family:var(--mono);font-size:12px;color:var(--muted);margin:0 0 22px;
+  border-left:2px solid var(--hairline);padding-left:12px}
+
+/* problem/built/result blocks */
+.pbr{display:grid;gap:0;margin:18px 0 0;border:1px solid var(--hairline);border-radius:10px;overflow:hidden}
+.pbr .row{padding:16px 18px;border-bottom:1px solid var(--hairline)}
+.pbr .row:last-child{border-bottom:none}
+.pbr .k{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.06em;
+  color:var(--muted);margin-bottom:6px;display:block}
+.pbr .v{font-size:15px;color:var(--ink);margin:0}
+.pbr .v .ok{color:var(--ledger);font-weight:500}
+
+/* projects grid as entries */
+.projgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:8px}
+.pcard{border:1px solid var(--hairline);border-radius:12px;padding:22px;background:var(--paper);
+  display:flex;flex-direction:column;transition:border-color .2s,transform .2s}
+.pcard:hover{border-color:var(--seal);transform:translateY(-2px)}
+.pcard .pn{font-family:var(--serif);font-size:19px;font-weight:600;margin:0 0 8px}
+.pcard .pd{font-size:14.5px;color:var(--muted);margin:0 0 14px;flex:1}
+.tags{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+.tag{font-family:var(--mono);font-size:11px;color:var(--muted);border:1px solid var(--hairline);
+  border-radius:980px;padding:3px 9px}
+.pcard a.more{font-family:var(--mono);font-size:12.5px;color:var(--seal);font-weight:500;margin-top:auto}
+.pcard a.more:hover{text-decoration:underline}
+
+/* skills */
+.skills{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+.skill{font-family:var(--mono);font-size:12.5px;color:var(--ink);border:1px solid var(--hairline);
+  border-radius:980px;padding:7px 14px;background:var(--paper)}
+
+/* experience */
+.exp-row{display:grid;grid-template-columns:170px 1fr;gap:26px;padding:22px 0;border-top:1px solid var(--hairline)}
+.exp-row:first-child{border-top:none}
+.exp-row .yr{font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+.exp-row .role{font-family:var(--serif);font-size:18px;font-weight:600}
+.exp-row .co{font-family:var(--mono);font-size:12px;color:var(--seal);margin:2px 0 7px}
+.exp-row .de{font-size:15px;color:var(--muted)}
+
+/* publication */
+.pub{border:1px solid var(--hairline);border-radius:12px;padding:26px;display:flex;gap:22px;background:var(--paper)}
+.pub .badge{width:52px;height:52px;border-radius:10px;background:var(--ink);color:var(--paper);flex:none;
+  display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;font-weight:500}
+.pub h3{font-size:18px;line-height:1.32;margin:0 0 8px}
+.pub .meta{font-family:var(--mono);font-size:12px;color:var(--seal);margin-bottom:9px}
+.pub .auth{font-size:13.5px;color:var(--muted);margin-bottom:12px}
+.pub .links{display:flex;gap:18px;flex-wrap:wrap}
+.pub .links a{font-family:var(--mono);font-size:12.5px;font-weight:500}
+.pub .links a.muted{color:var(--muted)}
+
+/* agents (reuse endpoints) */
+.agent-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:18px;margin-top:6px}
+.acard{border:1px solid var(--hairline);border-radius:12px;padding:22px;background:var(--paper);display:flex;flex-direction:column}
+.acard .atag{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.06em;
+  color:var(--seal);font-weight:500;margin-bottom:8px}
+.acard h3{font-size:18px;font-weight:600;margin:0 0 6px}
+.acard p.ad{font-size:14px;color:var(--muted);margin:0 0 14px}
+.acard input,.acard textarea{border:1px solid var(--hairline);border-radius:8px;background:#fff;color:var(--ink);
+  padding:9px 11px;font:14px/1.4 var(--sans);margin-bottom:9px;width:100%}
+.acard textarea{min-height:60px;resize:vertical}
+.acard .run{background:var(--ink);color:var(--paper);border:none;border-radius:980px;padding:9px 17px;
+  font-family:var(--mono);font-size:12.5px;font-weight:500;cursor:pointer;transition:background .2s;align-self:flex-start}
+.acard .run:hover{background:var(--seal)}
+.acard .run:disabled{opacity:.5;cursor:not-allowed}
+.acard .out{margin-top:13px;background:#fff;border:1px solid var(--hairline);border-radius:8px;padding:13px;
+  font-family:var(--mono);font-size:12.5px;white-space:pre-wrap;max-height:280px;overflow:auto;display:none;line-height:1.5}
+.acard .err{color:var(--seal);font-family:var(--mono);font-size:12px;margin-top:9px;display:none}
+.agenote{font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:20px}
+
+/* contact */
+.contact h2.title{margin-bottom:10px}
+.clinks{display:flex;gap:13px;flex-wrap:wrap;margin-top:10px}
+.clink{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:13px;font-weight:500;
+  border:1px solid var(--hairline);background:var(--paper);color:var(--ink);padding:12px 20px;border-radius:980px;
+  transition:border-color .2s,color .2s}
+.clink:hover{border-color:var(--seal);color:var(--seal)}
+.clink.primary{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.clink.primary:hover{background:var(--seal);border-color:var(--seal);color:#fff}
+
+footer{border-top:1px solid var(--hairline);padding:24px 48px;color:var(--muted);
+  font-family:var(--mono);font-size:11.5px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+footer a{color:var(--muted)} footer a:hover{color:var(--ink)}
+
+/* reveal */
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+.reveal.in{opacity:1;transform:none}
+
+/* focus accessibility */
+a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{
+  outline:2px solid var(--seal);outline-offset:2px;border-radius:4px}
+
+/* responsive: rail collapses to slim border + inline tags */
+@media(max-width:880px){
+  .shell{grid-template-columns:1fr}
+  .rail{position:static;height:auto;width:100%;border-right:none;border-bottom:1px solid var(--hairline);
+    overflow:visible;padding:18px 20px}
+  .rail-list::before{display:none}
+  .rail-list{display:flex;flex-wrap:wrap;gap:8px}
+  .rail-item{padding:6px 10px;border:1px solid var(--hairline);border-radius:980px;opacity:1;font-size:0}
+  .rail-item::before{display:none}
+  .rail-item .h{font-size:11px;line-height:1}
+  .rail-item .t,.rail-item .s{display:none}
+  .rail-head,.rail-title,.rail-sub{display:none}
+  .entry{padding:42px 22px}
+  footer{padding:22px}
+  .projgrid{grid-template-columns:1fr}
+  .exp-row{grid-template-columns:1fr;gap:5px}
+  .pub{flex-direction:column}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  .reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <!-- AUDIT-LOG RAIL -->
+  <nav class="rail" aria-label="Provenance ledger index">
+    <div class="rail-head">provenance ledger</div>
+    <div class="rail-title">Tharagesh A</div>
+    <div class="rail-sub">chain · 2021—present</div>
+    <ul class="rail-list" id="rail">
+      <li class="rail-item" data-target="commit"><span class="h">a1f3c9 · genesis</span><span class="t">2026-08-27</span><span class="s s-verified">verified</span></li>
+      <li class="rail-item" data-target="about"><span class="h">b7e2d1 · about</span><span class="t">2026-08-27</span><span class="s s-verified">verified</span></li>
+      <li class="rail-item" data-target="agenthelm"><span class="h">c4a8f0 · agenthelm</span><span class="t">2026-08-27</span><span class="s s-shipped">shipped</span></li>
+      <li class="rail-item" data-target="work"><span class="h">d9c3b5 · projects</span><span class="t">2026-08-27</span><span class="s s-shipped">shipped</span></li>
+      <li class="rail-item" data-target="stack"><span class="h">e2f1a7 · stack</span><span class="t">2026-08-27</span><span class="s s-verified">verified</span></li>
+      <li class="rail-item" data-target="experience"><span class="h">f5b9c2 · experience</span><span class="t">2026-08-27</span><span class="s s-verified">verified</span></li>
+      <li class="rail-item" data-target="publication"><span class="h">0a4e8d · research</span><span class="t">2024-07-12</span><span class="s s-verified">verified</span></li>
+      <li class="rail-item" data-target="agents"><span class="h">1c6b3f · agents</span><span class="t">2026-08-27</span><span class="s s-review">in-review</span></li>
+      <li class="rail-item" data-target="contact"><span class="h">2d7e4a · contact</span><span class="t">2026-08-27</span><span class="s s-verified">verified</span></li>
+    </ul>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- COMMIT / HERO -->
+    <section class="entry reveal" id="commit">
+      <div class="entry-head">
+        <span class="hash">#a1f3c9</span>
+        <span class="stamp">2026-08-27 · 09:14 IST</span>
+        <span class="status verified">verified</span>
+      </div>
+      <h2 class="title">Tharagesh A</h2>
+      <p class="thesis">"Building the provenance layer for autonomous agents — so every action an AI takes is logged, auditable, and attributable."</p>
+      <p class="muted">AI/ML Engineer &amp; solo founder of <b>AgentHelm</b> — an MCP-native governance and audit-trail platform for multi-agent AI systems. I design, ship, and verify production agents.</p>
+      <div class="commit">commit: genesis · author: Tharagesh A · parents: ∅ · tree: portfolio/ledger-v1</div>
+      <div class="clinks">
+        <a class="clink primary" href="mailto:tharagesharumugam@gmail.com">Email</a>
+        <a class="clink" href="https://linkedin.com/in/tharagesh-412468244" target="_blank">LinkedIn</a>
+        <a class="clink" href="https://github.com/Tharagesh17" target="_blank">GitHub</a>
+        <a class="clink" href="https://wa.me/918903356017" target="_blank">WhatsApp</a>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="entry reveal" id="about">
+      <div class="entry-head">
+        <span class="hash">#b7e2d1</span>
+        <span class="stamp">2026-08-27 · 09:15 IST</span>
+        <span class="status verified">verified</span>
+      </div>
+      <h2 class="title">About</h2>
+      <div class="idblock">
+        <img src="/static/portrait.png" alt="Tharagesh A">
+        <div class="who">
+          <div class="n">Tharagesh A</div>
+          <div class="r">AI/ML Engineer · Agent Developer</div>
+          <div class="l">Puducherry, India · open to freelance</div>
+        </div>
+      </div>
+      <p>I'm a Computer Science engineer from Puducherry focused on AI agent frameworks, full-stack systems, and production-grade autonomous software. My work centers on one question: <b>how do we trust agents once they act on our behalf?</b></p>
+      <p class="muted">That question became AgentHelm — a governance layer that turns agent activity into a verifiable, hash-chained record. This site is itself a small demonstration of that idea: every section is a logged entry.</p>
+    </section>
+
+    <!-- AGENTHELM -->
+    <section class="entry reveal" id="agenthelm">
+      <div class="entry-head">
+        <span class="hash">#c4a8f0</span>
+        <span class="stamp">2026-08-27 · 09:16 IST</span>
+        <span class="status shipped">shipped</span>
+      </div>
+      <h2 class="title">AgentHelm</h2>
+      <p class="thesis">"MCP-native governance &amp; audit-trail platform for multi-agent AI systems."</p>
+      <div class="pbr">
+        <div class="row"><span class="k">Problem</span><p class="v">Autonomous agents invoke tools and call other agents with no durable record of <i>who did what, when, and why</i> — making incidents impossible to audit after the fact.</p></div>
+        <div class="row"><span class="k">What was built</span><p class="v">An MCP-native control plane: safety boundaries, human-in-the-loop approvals, live traces, and a hash-chained provenance ledger. Published as Python + Node.js SDKs on PyPI and npm.</p></div>
+        <div class="row"><span class="k">Concrete result</span><p class="v"><span class="ok">✓ Shipped</span> on PyPI + npm · live demo at agenthelm.online · governance primitives adopted across my freelance agent engagements.</p></div>
+      </div>
+      <div class="clinks" style="margin-top:18px">
+        <a class="clink" href="https://agenthelm.online/" target="_blank">Visit AgentHelm →</a>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section class="entry reveal" id="work">
+      <div class="entry-head">
+        <span class="hash">#d9c3b5</span>
+        <span class="stamp">2026-08-27 · 09:17 IST</span>
+        <span class="status shipped">shipped</span>
+      </div>
+      <h2 class="title">Freelance projects</h2>
+      <p class="muted">Selected builds — each logged as a problem → what was built → result.</p>
+      <div class="projgrid">
+
+        <div class="pcard">
+          <div class="pn">ZavvyAI</div>
+          <div class="pd">Social-commerce assistant that helps online sellers manage products, orders, and customer conversations with AI.</div>
+          <div class="tags"><span class="tag">Next.js</span><span class="tag">Supabase</span><span class="tag">TypeScript</span></div>
+          <a class="more" href="https://zavvyai.shop/" target="_blank">view →</a>
+        </div>
+
+        <div class="pcard">
+          <div class="pn">AI Recruitment Agent</div>
+          <div class="pd">Screens resumes, extracts skills, ranks candidates, and drafts interview summaries automatically.</div>
+          <div class="tags"><span class="tag">Python</span><span class="tag">LangGraph</span><span class="tag">Gemini</span><span class="tag">Supabase</span></div>
+          <a class="more" href="#">view →</a>
+        </div>
+
+        <div class="pcard">
+          <div class="pn">CRM Agents</div>
+          <div class="pd">Business-automation agents connecting Gmail, Calendar, Notion, and Slack to manage leads and follow-ups.</div>
+          <div class="tags"><span class="tag">Python</span><span class="tag">FastAPI</span><span class="tag">LangGraph</span></div>
+          <a class="more" href="https://github.com/Tharagesh17/crm-agents" target="_blank">view →</a>
+        </div>
+
+        <div class="pcard">
+          <div class="pn">Dementia Detection</div>
+          <div class="pd">MRI-based early dementia detection via transfer learning.</div>
+          <div class="tags"><span class="tag">Python</span><span class="tag">TensorFlow</span><span class="tag">Keras</span><span class="tag">OpenCV</span></div>
+          <a class="more" href="#">view →</a>
+        </div>
+
+        <div class="pcard">
+          <div class="pn">CodeLens — AI SaaS</div>
+          <div class="pd">Chat with your codebase: GitHub-connected RAG with AST-aware chunking and source citations.</div>
+          <div class="tags"><span class="tag">Next.js 14</span><span class="tag">FastAPI</span><span class="tag">Supabase</span><span class="tag">pgvector</span></div>
+          <a class="more" href="https://chatwithcode-topaz.vercel.app/" target="_blank">view →</a>
+        </div>
+
+        <div class="pcard">
+          <div class="pn">AgentHelm × Sarvam AI</div>
+          <div class="pd">AgentHelm was selected for the <b>Sarvam AI Startup Program</b> — validating its MCP-native agent-governance approach and giving early access to Sarvam-105B for agent workloads.</div>
+          <div class="tags"><span class="tag">Recognition</span><span class="tag">Sarvam AI</span><span class="tag">MCP</span></div>
+          <a class="more" href="https://agenthelm.online/" target="_blank">view →</a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- STACK -->
+    <section class="entry reveal" id="stack">
+      <div class="entry-head">
+        <span class="hash">#e2f1a7</span>
+        <span class="stamp">2026-08-27 · 09:18 IST</span>
+        <span class="status verified">verified</span>
+      </div>
+      <h2 class="title">Tech stack</h2>
+      <div class="skills">
+        <span class="skill">Python</span><span class="skill">TypeScript</span><span class="skill">FastAPI</span><span class="skill">Next.js</span>
+        <span class="skill">LangGraph</span><span class="skill">LangChain</span><span class="skill">CrewAI</span>
+        <span class="skill">OpenAI</span><span class="skill">Sarvam AI</span><span class="skill">Gemini</span>
+        <span class="skill">RAG / Vector DBs</span><span class="skill">pgvector</span><span class="skill">Chroma</span>
+        <span class="skill">MCP</span><span class="skill">Agent Orchestration</span><span class="skill">Tool Use</span>
+        <span class="skill">Supabase</span><span class="skill">PostgreSQL</span><span class="skill">Redis</span>
+        <span class="skill">Docker</span><span class="skill">GitHub Actions</span><span class="skill">AWS</span>
+      </div>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section class="entry reveal" id="experience">
+      <div class="entry-head">
+        <span class="hash">#f5b9c2</span>
+        <span class="stamp">2026-08-27 · 09:19 IST</span>
+        <span class="status verified">verified</span>
+      </div>
+      <h2 class="title">Experience</h2>
+      <div class="exp-row">
+        <div class="yr">2025 — present</div>
+        <div><div class="role">Founder &amp; Creator — AgentHelm</div><div class="co">Open-source governance SDK</div>
+        <div class="de">Designed and shipped AgentHelm: budget enforcement, human-in-the-loop Telegram control, live traces, and Python/Node.js SDKs on PyPI + npm.</div></div>
+      </div>
+      <div class="exp-row">
+        <div class="yr">2025 — present</div>
+        <div><div class="role">AI Automation Freelancer</div><div class="co">Independent</div>
+        <div class="de">Built a portfolio of 15+ AI automation projects — support agents, RAG chatbots, recruitment agents, and multi-agent business systems using LangGraph.</div></div>
+      </div>
+      <div class="exp-row">
+        <div class="yr">2021 — 2025</div>
+        <div><div class="role">B.Tech. Computer Science &amp; Engineering</div><div class="co">Manakula Vinayagar Institute of Technology, Puducherry</div>
+        <div class="de">Foundations in data structures, algorithms, and software engineering through ML models, full-stack apps, and AI systems.</div></div>
+      </div>
+    </section>
+
+    <!-- PUBLICATION -->
+    <section class="entry reveal" id="publication">
+      <div class="entry-head">
+        <span class="hash">#0a4e8d</span>
+        <span class="stamp">2024-07-12 · 00:00 UTC</span>
+        <span class="status verified">verified</span>
+      </div>
+      <h2 class="title">Publication</h2>
+      <div class="pub">
+        <div class="badge">PDF</div>
+        <div>
+          <h3>Inception V3: An Improved Deep Learning Approach to Early Alzheimer's Disease Identification</h3>
+          <div class="meta">African Journal of Biomedical Research · Vol. 27, No. 4S (2024)</div>
+          <div class="auth">R. Sathish Kumar, S. Balaji, N. Arikaran, <b style="color:var(--ink)">A. Tharagesh</b>, N. Kishore, K. Praveen</div>
+          <div class="links">
+            <a href="https://doi.org/10.53555/AJBR.v27i4S.7468" target="_blank">DOI ↗</a>
+            <a class="muted" href="https://africanjournalofbiomedicalresearch.com/index.php/AJBR/article/view/7468" target="_blank">article ↗</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AGENTS -->
+    <section class="entry reveal" id="agents">
+      <div class="entry-head">
+        <span class="hash">#1c6b3f</span>
+        <span class="stamp">2026-08-27 · 09:20 IST</span>
+        <span class="status review">in-review</span>
+      </div>
+      <h2 class="title">Live agents</h2>
+      <p class="thesis">"Five agents, hash-logged on every run — Sarvam AI, server-side key."</p>
+      <div class="agent-grid" id="cards"></div>
+      <p class="agenote">rate-limited · 12 runs/hour/visitor · key never leaves the backend</p>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="entry contact reveal" id="contact">
+      <div class="entry-head">
+        <span class="hash">#2d7e4a</span>
+        <span class="stamp">2026-08-27 · 09:21 IST</span>
+        <span class="status verified">verified</span>
+      </div>
+      <h2 class="title">Contact</h2>
+      <p class="muted">Open to freelance work, research collaboration, and full-time roles.</p>
+      <div class="clinks">
+        <a class="clink primary" href="mailto:tharagesharumugam@gmail.com">Email me</a>
+        <a class="clink" href="https://linkedin.com/in/tharagesh-412468244" target="_blank">LinkedIn</a>
+        <a class="clink" href="https://github.com/Tharagesh17" target="_blank">GitHub</a>
+        <a class="clink" href="https://wa.me/918903356017" target="_blank">WhatsApp</a>
+      </div>
+      <p class="agenote" style="margin-top:18px">Puducherry, India · remote-friendly (CNC / BLR / HYD)</p>
+    </section>
+
+    <footer>
+      <span>© 2026 Tharagesh A · provenance ledger v1</span>
+      <span>Puducherry, India · remote-friendly</span>
+    </footer>
+
+  </main>
+</div>
+
+<script>
+// ---- AGENTS (reuse existing endpoints) ----
+const AGENTS = [
+  {id:'web_research', name:'Web Research', tag:'multi-step', desc:'Searches the web and synthesizes a markdown report.',
+    fields:[{k:'query',ph:'e.g. latest advances in RAG',t:'text'}]},
+  {id:'competitive_analysis', name:'Competitive Analysis', tag:'multi-step', desc:'Compares up to 3 companies on a dimension.',
+    fields:[{k:'competitors',ph:'OpenAI, Anthropic, Cohere',t:'text'},{k:'dimension',ph:'features and pricing',t:'text'}]},
+  {id:'pdf_qa', name:'PDF Q&A', tag:'document', desc:'Answers questions from an uploaded PDF (text only).',
+    fields:[{k:'pdf',t:'file',accept:'.pdf'},{k:'question',ph:'Summarize the key points',t:'text'}]},
+  {id:'email_draft', name:'Email Draft', tag:'text', desc:'Drafts a clean email from your bullet points.',
+    fields:[{k:'context',ph:'Bullets: project delayed...',t:'area'},{k:'tone',ph:'professional',t:'text'}]},
+  {id:'voice', name:'Voice Agent', tag:'speech', desc:'Upload audio (≤30s) — gets transcribed and answered.',
+    fields:[{k:'audio',t:'file',accept:'audio/*'}]},
+];
+const cards = document.getElementById('cards');
+AGENTS.forEach(a=>{
+  const c=document.createElement('div'); c.className='acard';
+  let fields='';
+  a.fields.forEach(f=>{
+    if(f.t==='file') fields+=`<input type="file" data-k="${f.k}" accept="${f.accept||''}">`;
+    else if(f.t==='area') fields+=`<textarea data-k="${f.k}" placeholder="${f.ph||''}"></textarea>`;
+    else fields+=`<input data-k="${f.k}" placeholder="${f.ph||''}" value="${f.t==='text'?(f.ph==='professional'?'professional':''):''}">`;
+  });
+  c.innerHTML=`<span class="atag">${a.tag}</span><h3>${a.name}</h3><p class="ad">${a.desc}</p>${fields}
+    <button class="run" data-id="${a.id}">run</button><div class="out"></div><div class="err"></div>`;
+  cards.appendChild(c);
+  const btn=c.querySelector('.run'); const out=c.querySelector('.out'); const err=c.querySelector('.err');
+  btn.onclick=async()=>{
+    btn.disabled=true; out.style.display='none'; err.style.display='none'; out.textContent='running…'; out.style.display='block';
+    try{
+      if(a.id==='pdf_qa'){
+        const fd=new FormData(); const pf=c.querySelector('[data-k=pdf]').files[0];
+        if(!pf){throw new Error('Upload a PDF first.');}
+        fd.append('pdf',pf);
+        const r1=await fetch('/api/pdf',{method:'POST',body:fd}); const j1=await r1.json();
+        if(!j1.ok) throw new Error(j1.error);
+        const q=c.querySelector('[data-k=question]').value;
+        const r2=await fetch('/api/run',{method:'POST',headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({agent:'pdf_qa',pdf_text:j1.pdf_text,question:q})});
+        const j2=await r2.json(); if(!j2.ok) throw new Error(j2.error);
+        out.textContent=j2.result;
+      } else if(a.id==='voice'){
+        const af=c.querySelector('[data-k=audio]').files[0];
+        if(!af){throw new Error('Upload audio first.');}
+        const fd=new FormData(); fd.append('audio',af);
+        const r=await fetch('/api/voice',{method:'POST',body:fd}); const j=await r.json();
+        if(!j.ok) throw new Error(j.error);
+        out.textContent='Transcript: '+j.transcript+'\n\nReply: '+j.reply;
+      } else {
+        const p={agent:a.id};
+        a.fields.forEach(f=>{ if(f.t!=='file') p[f.k]=c.querySelector(`[data-k="${f.k}"]`).value; });
+        const r=await fetch('/api/run',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(p)});
+        const j=await r.json(); if(!j.ok) throw new Error(j.error);
+        out.textContent=j.result;
+      }
+    }catch(e){ err.textContent=e.message; err.style.display='block'; out.style.display='none'; }
+    finally{ btn.disabled=false; }
+  };
+});
+
+// ---- scroll reveal + rail active state ----
+const io=new IntersectionObserver((es)=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+const railItems=[...document.querySelectorAll('.rail-item')];
+const sections=railItems.map(it=>document.getElementById(it.dataset.target)).filter(Boolean);
+const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if(!reduce){
+  const so=new IntersectionObserver((es)=>{
+    es.forEach(e=>{
+      if(e.isIntersecting){
+        const id=e.target.id;
+        railItems.forEach(it=>it.classList.toggle('active', it.dataset.target===id));
+      }
+    });
+  },{rootMargin:'-45% 0px -50% 0px'});
+  sections.forEach(s=>so.observe(s));
+}
+railItems.forEach(it=>it.addEventListener('click',()=>{
+  const t=document.getElementById(it.dataset.target);
+  if(t) t.scrollIntoView({behavior: reduce?'auto':'smooth', block:'start'});
+}));
+</script>
+</body>
+</html>
