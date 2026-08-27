@@ -11,8 +11,8 @@
 <style>
 :root{
   --paper:#F5F6F3; --ink:#14181C; --muted:#5C6570; --hairline:#DEE2DF;
-  --seal:#B8862E; --seal-wash:#F3ECDD;
-  --ledger:#2E6B57; --ledger-wash:#E4EFEA;
+  --seal:#B8862E; --seal-wash:#F3ECDD; --seal-ink:#8A5E12;   /* AA text on light */
+  --ledger:#2E6B57; --ledger-wash:#E4EFEA; --ledger-ink:#1E4A3B;
   --rail-w:248px;
   --shadow:0 1px 2px rgba(20,24,28,.04),0 8px 24px rgba(20,24,28,.05);
   --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
@@ -21,10 +21,10 @@
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);
-  line-height:1.62;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--serif);
+  line-height:1.66;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 ::selection{background:var(--seal);color:#fff}
-a{color:var(--seal);text-decoration:none}
+a{color:var(--seal-ink);text-decoration:none}
 img{max-width:100%;display:block}
 h1,h2,h3,h4{font-family:var(--serif);font-weight:600;letter-spacing:-.012em;color:var(--ink);margin:0}
 
@@ -35,10 +35,10 @@ h1,h2,h3,h4{font-family:var(--serif);font-weight:600;letter-spacing:-.012em;colo
 .main{padding:0 0 80px;min-width:0}
 
 /* ---------- rail (audit log) ---------- */
-.rail-head{font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--muted);
+.rail-head{font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:var(--muted);
   text-transform:uppercase;margin-bottom:6px}
 .rail-title{font-family:var(--serif);font-size:18px;font-weight:600;margin:0 0 2px}
-.rail-sub{font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:22px}
+.rail-sub{font-family:var(--mono);font-size:12px;color:var(--muted);margin-bottom:22px}
 .rail-list{list-style:none;margin:0;padding:0;position:relative}
 .rail-list::before{content:"";position:absolute;left:6px;top:6px;bottom:6px;width:1px;background:var(--hairline)}
 .rail-item{position:relative;padding:9px 0 9px 26px;cursor:pointer;opacity:.62;transition:opacity .25s}
@@ -47,10 +47,10 @@ h1,h2,h3,h4{font-family:var(--serif);font-weight:600;letter-spacing:-.012em;colo
 .rail-item:hover{opacity:1}
 .rail-item.active{opacity:1}
 .rail-item.active::before{background:var(--seal);border-color:var(--seal)}
-.rail-item .h{font-family:var(--mono);font-size:11px;color:var(--ink);display:block;line-height:1.3}
-.rail-item .t{font-family:var(--mono);font-size:10.5px;color:var(--muted);display:block;margin-top:1px}
-.rail-item .s{font-family:var(--mono);font-size:10px;font-weight:500;display:inline-block;margin-top:3px}
-.s-verified{color:var(--seal)} .s-shipped{color:var(--ledger)} .s-review{color:var(--muted)}
+.rail-item .h{font-family:var(--mono);font-size:12px;color:var(--ink);display:block;line-height:1.3}
+.rail-item .t{font-family:var(--mono);font-size:12px;color:var(--muted);display:block;margin-top:1px}
+.rail-item .s{font-family:var(--mono);font-size:12px;font-weight:500;display:inline-block;margin-top:3px}
+.s-verified{color:var(--seal-ink)} .s-shipped{color:var(--ledger-ink)} .s-review{color:var(--muted)} .s-available{color:var(--ledger-ink)}
 
 /* ---------- entries ---------- */
 .entry{padding:56px 48px;border-bottom:1px solid var(--hairline);position:relative}
@@ -59,11 +59,12 @@ h1,h2,h3,h4{font-family:var(--serif);font-weight:600;letter-spacing:-.012em;colo
 .hash{font-family:var(--mono);font-size:12px;background:var(--ink);color:var(--paper);
   padding:3px 9px;border-radius:5px;letter-spacing:.02em}
 .stamp{font-family:var(--mono);font-size:12px;color:var(--muted)}
-.status{font-family:var(--mono);font-size:11px;font-weight:500;text-transform:uppercase;
-  letter-spacing:.06em;padding:3px 10px;border-radius:980px;border:1px solid transparent}
-.status.verified{color:var(--seal);background:var(--seal-wash);border-color:#E6D6B4}
-.status.shipped{color:var(--ledger);background:var(--ledger-wash);border-color:#C5DBD0}
+.status{font-family:var(--mono);font-size:12px;font-weight:600;text-transform:uppercase;
+  letter-spacing:.05em;padding:4px 11px;border-radius:980px;border:1px solid transparent}
+.status.verified{color:var(--seal-ink);background:var(--seal-wash);border-color:#E6D6B4}
+.status.shipped{color:var(--ledger-ink);background:var(--ledger-wash);border-color:#C5DBD0}
 .status.review{color:var(--muted);background:transparent;border-color:var(--hairline)}
+.status.available{color:#fff;background:var(--ledger);border-color:var(--ledger-ink)}
 .entry h2.title{font-size:clamp(26px,3.4vw,38px);line-height:1.1;margin:0 0 6px}
 .entry .thesis{font-family:var(--serif);font-style:italic;font-size:17px;color:var(--muted);
   margin:0 0 22px;max-width:680px}
@@ -76,7 +77,7 @@ h1,h2,h3,h4{font-family:var(--serif);font-weight:600;letter-spacing:-.012em;colo
 .idblock img{width:84px;height:84px;border-radius:10px;object-fit:cover;object-position:center 28%;
   border:1px solid var(--hairline);flex:none}
 .idblock .who .n{font-family:var(--serif);font-size:17px;font-weight:600}
-.idblock .who .r{font-family:var(--mono);font-size:11.5px;color:var(--seal);margin-top:2px}
+.idblock .who .r{font-family:var(--mono);font-size:12px;color:var(--seal-ink);margin-top:2px}
 .idblock .who .l{font-size:13px;color:var(--muted);margin-top:3px}
 @media(max-width:520px){ .idblock{margin-left:0} }
 
@@ -103,7 +104,7 @@ h1,h2,h3,h4{font-family:var(--serif);font-weight:600;letter-spacing:-.012em;colo
 .tags{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
 .tag{font-family:var(--mono);font-size:11px;color:var(--muted);border:1px solid var(--hairline);
   border-radius:980px;padding:3px 9px}
-.pcard a.more{font-family:var(--mono);font-size:12.5px;color:var(--seal);font-weight:500;margin-top:auto}
+.pcard a.more{font-family:var(--mono);font-size:12.5px;color:var(--seal-ink);font-weight:500;margin-top:auto}
 .pcard a.more:hover{text-decoration:underline}
 
 /* skills */
@@ -116,7 +117,7 @@ h1,h2,h3,h4{font-family:var(--serif);font-weight:600;letter-spacing:-.012em;colo
 .exp-row:first-child{border-top:none}
 .exp-row .yr{font-family:var(--mono);font-size:12.5px;color:var(--muted)}
 .exp-row .role{font-family:var(--serif);font-size:18px;font-weight:600}
-.exp-row .co{font-family:var(--mono);font-size:12px;color:var(--seal);margin:2px 0 7px}
+.exp-row .co{font-family:var(--mono);font-size:12px;color:var(--seal-ink);margin:2px 0 7px}
 .exp-row .de{font-size:15px;color:var(--muted)}
 
 /* publication */
@@ -124,7 +125,7 @@ h1,h2,h3,h4{font-family:var(--serif);font-weight:600;letter-spacing:-.012em;colo
 .pub .badge{width:52px;height:52px;border-radius:10px;background:var(--ink);color:var(--paper);flex:none;
   display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;font-weight:500}
 .pub h3{font-size:18px;line-height:1.32;margin:0 0 8px}
-.pub .meta{font-family:var(--mono);font-size:12px;color:var(--seal);margin-bottom:9px}
+.pub .meta{font-family:var(--mono);font-size:12px;color:var(--seal-ink);margin-bottom:9px}
 .pub .auth{font-size:13.5px;color:var(--muted);margin-bottom:12px}
 .pub .links{display:flex;gap:18px;flex-wrap:wrap}
 .pub .links a{font-family:var(--mono);font-size:12.5px;font-weight:500}
@@ -134,7 +135,7 @@ h1,h2,h3,h4{font-family:var(--serif);font-weight:600;letter-spacing:-.012em;colo
 .agent-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:18px;margin-top:6px}
 .acard{border:1px solid var(--hairline);border-radius:12px;padding:22px;background:var(--paper);display:flex;flex-direction:column}
 .acard .atag{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.06em;
-  color:var(--seal);font-weight:500;margin-bottom:8px}
+  color:var(--seal-ink);font-weight:500;margin-bottom:8px}
 .acard h3{font-size:18px;font-weight:600;margin:0 0 6px}
 .acard p.ad{font-size:14px;color:var(--muted);margin:0 0 14px}
 .acard input,.acard textarea{border:1px solid var(--hairline);border-radius:8px;background:#fff;color:var(--ink);
@@ -142,11 +143,11 @@ h1,h2,h3,h4{font-family:var(--serif);font-weight:600;letter-spacing:-.012em;colo
 .acard textarea{min-height:60px;resize:vertical}
 .acard .run{background:var(--ink);color:var(--paper);border:none;border-radius:980px;padding:9px 17px;
   font-family:var(--mono);font-size:12.5px;font-weight:500;cursor:pointer;transition:background .2s;align-self:flex-start}
-.acard .run:hover{background:var(--seal)}
+.acard .run:hover{background:var(--seal-ink)}
 .acard .run:disabled{opacity:.5;cursor:not-allowed}
 .acard .out{margin-top:13px;background:#fff;border:1px solid var(--hairline);border-radius:8px;padding:13px;
   font-family:var(--mono);font-size:12.5px;white-space:pre-wrap;max-height:280px;overflow:auto;display:none;line-height:1.5}
-.acard .err{color:var(--seal);font-family:var(--mono);font-size:12px;margin-top:9px;display:none}
+.acard .err{color:var(--seal-ink);font-family:var(--mono);font-size:12px;margin-top:9px;display:none}
 .agenote{font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:20px}
 
 /* contact */
@@ -155,12 +156,12 @@ h1,h2,h3,h4{font-family:var(--serif);font-weight:600;letter-spacing:-.012em;colo
 .clink{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:13px;font-weight:500;
   border:1px solid var(--hairline);background:var(--paper);color:var(--ink);padding:12px 20px;border-radius:980px;
   transition:border-color .2s,color .2s}
-.clink:hover{border-color:var(--seal);color:var(--seal)}
+.clink:hover{border-color:var(--seal-ink);color:var(--seal-ink)}
 .clink.primary{background:var(--ink);color:var(--paper);border-color:var(--ink)}
-.clink.primary:hover{background:var(--seal);border-color:var(--seal);color:#fff}
+.clink.primary:hover{background:var(--seal-ink);border-color:var(--seal-ink);color:#fff}
 
 footer{border-top:1px solid var(--hairline);padding:24px 48px;color:var(--muted);
-  font-family:var(--mono);font-size:11.5px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+  font-family:var(--mono);font-size:12px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
 footer a{color:var(--muted)} footer a:hover{color:var(--ink)}
 
 /* reveal */
@@ -204,14 +205,17 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{
     <div class="rail-title">Tharagesh A</div>
     <div class="rail-sub">chain · 2021—present</div>
     <ul class="rail-list" id="rail">
-      <li class="rail-item" data-target="commit"><span class="h">a1f3c9 · genesis</span><span class="t">2026-08-27</span><span class="s s-verified">verified</span></li>
+      <li class="rail-item" data-target="commit"><span class="h">a1f3c9 · genesis</span><span class="t">2026-08-27</span><span class="s s-verified">available</span></li>
       <li class="rail-item" data-target="about"><span class="h">b7e2d1 · about</span><span class="t">2026-08-27</span><span class="s s-verified">verified</span></li>
       <li class="rail-item" data-target="agenthelm"><span class="h">c4a8f0 · agenthelm</span><span class="t">2026-08-27</span><span class="s s-shipped">shipped</span></li>
       <li class="rail-item" data-target="work"><span class="h">d9c3b5 · projects</span><span class="t">2026-08-27</span><span class="s s-shipped">shipped</span></li>
+      <li class="rail-item" data-target="services"><span class="h">3c1a9e · services</span><span class="t">2026-08-27</span><span class="s s-available">available</span></li>
       <li class="rail-item" data-target="stack"><span class="h">e2f1a7 · stack</span><span class="t">2026-08-27</span><span class="s s-verified">verified</span></li>
       <li class="rail-item" data-target="experience"><span class="h">f5b9c2 · experience</span><span class="t">2026-08-27</span><span class="s s-verified">verified</span></li>
+      <li class="rail-item" data-target="process"><span class="h">7e2b41 · process</span><span class="t">2026-08-27</span><span class="s s-verified">verified</span></li>
       <li class="rail-item" data-target="publication"><span class="h">0a4e8d · research</span><span class="t">2024-07-12</span><span class="s s-verified">verified</span></li>
       <li class="rail-item" data-target="agents"><span class="h">1c6b3f · agents</span><span class="t">2026-08-27</span><span class="s s-review">in-review</span></li>
+      <li class="rail-item" data-target="faq"><span class="h">9f0c7d · faq</span><span class="t">2026-08-27</span><span class="s s-verified">verified</span></li>
       <li class="rail-item" data-target="contact"><span class="h">2d7e4a · contact</span><span class="t">2026-08-27</span><span class="s s-verified">verified</span></li>
     </ul>
   </nav>
@@ -224,17 +228,18 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{
       <div class="entry-head">
         <span class="hash">#a1f3c9</span>
         <span class="stamp">2026-08-27 · 09:14 IST</span>
-        <span class="status verified">verified</span>
+        <span class="status available">booking now</span>
       </div>
       <h2 class="title">Tharagesh A</h2>
-      <p class="thesis">"Building the provenance layer for autonomous agents — so every action an AI takes is logged, auditable, and attributable."</p>
-      <p class="muted">AI/ML Engineer &amp; solo founder of <b>AgentHelm</b> — an MCP-native governance and audit-trail platform for multi-agent AI systems. I design, ship, and verify production agents.</p>
+      <p class="thesis">"Building the provenance layer for autonomous agents, so every action an AI takes is logged, auditable, and attributable."</p>
+      <p class="muted">AI/ML Engineer &amp; solo founder of <b>AgentHelm</b>, an MCP-native governance and audit-trail platform for multi-agent AI systems. I design, ship, and verify production agents for teams that need them to work.</p>
       <div class="commit">commit: genesis · author: Tharagesh A · parents: ∅ · tree: portfolio/ledger-v1</div>
       <div class="clinks">
-        <a class="clink primary" href="mailto:tharagesharumugam@gmail.com">Email</a>
+        <a class="clink primary" href="mailto:tharagesharumugam@gmail.com?subject=Hire%20me%20%E2%80%94%20freelance%20AI%20agent%20project&amp;body=Hi%20Tharagesh%2C%0A%0AI%20saw%20your%20portfolio%20and%20want%20to%20talk%20about%20a%20project%3A%0A%0A-%20What%20I%20need%3A%20%0A-%20Timeline%3A%20%0A-%20Budget%20range%3A%20%0A%0ALet%27s%20talk%20soon.">Email me</a>
+        <a class="clink" href="https://wa.me/918903356017?text=Hi%20Tharagesh%2C%20I%20saw%20your%20portfolio%20and%20want%20to%20discuss%20a%20freelance%20project." target="_blank">Book a call</a>
         <a class="clink" href="https://linkedin.com/in/tharagesh-412468244" target="_blank">LinkedIn</a>
         <a class="clink" href="https://github.com/Tharagesh17" target="_blank">GitHub</a>
-        <a class="clink" href="https://wa.me/918903356017" target="_blank">WhatsApp</a>
+        <a class="clink" href="/resume" download>Download CV</a>
       </div>
     </section>
 
@@ -292,6 +297,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{
           <div class="pn">ZavvyAI</div>
           <div class="pd">Social-commerce assistant that helps online sellers manage products, orders, and customer conversations with AI.</div>
           <div class="tags"><span class="tag">Next.js</span><span class="tag">Supabase</span><span class="tag">TypeScript</span></div>
+          <p class="pd" style="color:var(--ledger-ink);font-size:13.5px;margin:0 0 12px"><span class="ok">▸</span> Live for sellers; [add: daily active users / orders handled].</p>
           <a class="more" href="https://zavvyai.shop/" target="_blank">view →</a>
         </div>
 
@@ -299,27 +305,29 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{
           <div class="pn">AI Recruitment Agent</div>
           <div class="pd">Screens resumes, extracts skills, ranks candidates, and drafts interview summaries automatically.</div>
           <div class="tags"><span class="tag">Python</span><span class="tag">LangGraph</span><span class="tag">Gemini</span><span class="tag">Supabase</span></div>
-          <a class="more" href="#">view →</a>
+          <a class="more" href="#contact">case study on request →</a>
         </div>
 
         <div class="pcard">
           <div class="pn">CRM Agents</div>
           <div class="pd">Business-automation agents connecting Gmail, Calendar, Notion, and Slack to manage leads and follow-ups.</div>
           <div class="tags"><span class="tag">Python</span><span class="tag">FastAPI</span><span class="tag">LangGraph</span></div>
+          <p class="pd" style="color:var(--ledger-ink);font-size:13.5px;margin:0 0 12px"><span class="ok">▸</span> Automates lead follow-up across 4 tools; [add: hours saved / week].</p>
           <a class="more" href="https://github.com/Tharagesh17/crm-agents" target="_blank">view →</a>
         </div>
 
         <div class="pcard">
           <div class="pn">Dementia Detection</div>
-          <div class="pd">MRI-based early dementia detection via transfer learning.</div>
+          <div class="pd">MRI-based early dementia detection via transfer learning (published research).</div>
           <div class="tags"><span class="tag">Python</span><span class="tag">TensorFlow</span><span class="tag">Keras</span><span class="tag">OpenCV</span></div>
-          <a class="more" href="#">view →</a>
+          <a class="more" href="#contact">case study on request →</a>
         </div>
 
         <div class="pcard">
           <div class="pn">CodeLens — AI SaaS</div>
           <div class="pd">Chat with your codebase: GitHub-connected RAG with AST-aware chunking and source citations.</div>
           <div class="tags"><span class="tag">Next.js 14</span><span class="tag">FastAPI</span><span class="tag">Supabase</span><span class="tag">pgvector</span></div>
+          <p class="pd" style="color:var(--ledger-ink);font-size:13.5px;margin:0 0 12px"><span class="ok">▸</span> Public demo live; [add: repos indexed / queries served].</p>
           <a class="more" href="https://chatwithcode-topaz.vercel.app/" target="_blank">view →</a>
         </div>
 
@@ -377,6 +385,75 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{
       </div>
     </section>
 
+    <!-- SERVICES -->
+    <section class="entry reveal" id="services">
+      <div class="entry-head">
+        <span class="hash">#3c1a9e</span>
+        <span class="stamp">2026-08-27 · 09:20 IST</span>
+        <span class="status available">booking now</span>
+      </div>
+      <h2 class="title">Services</h2>
+      <p class="thesis">"Here is what I can build for you, not just what I have built."</p>
+      <div class="projgrid">
+        <div class="pcard">
+          <div class="pn">AI agents for support &amp; ops</div>
+          <div class="pd">Tier-1 support, ticket triage, CRM updates, and follow-ups across Gmail, Calendar, Slack, and Notion. Your stack, wired together and running daily.</div>
+          <div class="tags"><span class="tag">LangGraph</span><span class="tag">Tool use</span><span class="tag">Integrations</span></div>
+          <div class="pbr" style="margin-top:14px"><div class="row"><span class="k">Scope</span><p class="v">From a single workflow to a multi-agent ops layer.</p></div></div>
+        </div>
+        <div class="pcard">
+          <div class="pn">RAG chatbots over your docs</div>
+          <div class="pd">Cited answers over your knowledge base, with AST-aware chunking (the CodeLens method) so replies point back to the source.</div>
+          <div class="tags"><span class="tag">RAG</span><span class="tag">pgvector</span><span class="tag">Citations</span></div>
+          <div class="pbr" style="margin-top:14px"><div class="row"><span class="k">Scope</span><p class="v">Internal copilot or customer-facing bot, grounded in your data.</p></div></div>
+        </div>
+        <div class="pcard">
+          <div class="pn">Agent governance &amp; audit layer</div>
+          <div class="pd">Safety boundaries, human-in-the-loop approvals, and a hash-chained provenance log for your existing agent stack. The AgentHelm approach, applied to your systems.</div>
+          <div class="tags"><span class="tag">MCP</span><span class="tag">Observability</span><span class="tag">Compliance</span></div>
+          <div class="pbr" style="margin-top:14px"><div class="row"><span class="k">Scope</span><p class="v">Retrofit trust and audit trails onto agents you already run.</p></div></div>
+        </div>
+        <div class="pcard">
+          <div class="pn">Bespoke multi-agent systems</div>
+          <div class="pd">End-to-end agent workflows built from scratch on LangGraph or LangChain, integrated with your model and keys (Sarvam, OpenAI, or Gemini).</div>
+          <div class="tags"><span class="tag">Architecture</span><span class="tag">Build</span><span class="tag">Handoff</span></div>
+          <div class="pbr" style="margin-top:14px"><div class="row"><span class="k">Scope</span><p class="v">A scoped proposal with milestones before any code is written.</p></div></div>
+        </div>
+      </div>
+      <p class="agenote">Engagements are fixed-price or retainer. Tell me the problem and the success metric, and I will scope it.</p>
+    </section>
+
+    <!-- PROCESS -->
+    <section class="entry reveal" id="process">
+      <div class="entry-head">
+        <span class="hash">#7e2b41</span>
+        <span class="stamp">2026-08-27 · 09:21 IST</span>
+        <span class="status verified">verified</span>
+      </div>
+      <h2 class="title">How I work</h2>
+      <p class="muted">A short, predictable path. You always know what happens next.</p>
+      <div class="exp-row">
+        <div class="yr">01</div>
+        <div><div class="role">Discovery call</div><div class="co">free, 30 minutes</div>
+        <div class="de">We scope the problem, the data you have, and the single metric that means it worked.</div></div>
+      </div>
+      <div class="exp-row">
+        <div class="yr">02</div>
+        <div><div class="role">Scoped proposal</div><div class="co">fixed-price or retainer</div>
+        <div class="de">A written proposal: what I will build, the timeline, milestones, and the price. No surprises mid-project.</div></div>
+      </div>
+      <div class="exp-row">
+        <div class="yr">03</div>
+        <div><div class="role">Build, with weekly demos</div><div class="co">your model, your keys</div>
+        <div class="de">I build against your stack and show working progress every week, not just at the end.</div></div>
+      </div>
+      <div class="exp-row">
+        <div class="yr">04</div>
+        <div><div class="role">Handoff &amp; governance log</div><div class="co">yours to run</div>
+        <div class="de">Docs, a runbook, and a provenance log so you can trust and operate the system after I leave.</div></div>
+      </div>
+    </section>
+
     <!-- PUBLICATION -->
     <section class="entry reveal" id="publication">
       <div class="entry-head">
@@ -428,6 +505,32 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{
         <a class="clink" href="https://wa.me/918903356017" target="_blank">WhatsApp</a>
       </div>
       <p class="agenote" style="margin-top:18px">Puducherry, India · remote-friendly (CNC / BLR / HYD)</p>
+    </section>
+
+    <!-- FAQ -->
+    <section class="entry reveal" id="faq">
+      <div class="entry-head">
+        <span class="hash">#9f0c7d</span>
+        <span class="stamp">2026-08-27 · 09:22 IST</span>
+        <span class="status verified">verified</span>
+      </div>
+      <h2 class="title">FAQ</h2>
+      <div class="exp-row">
+        <div class="yr">Q1</div>
+        <div><div class="role">What timezone do you work in?</div><div class="de">IST (UTC+5:30). I overlap comfortably with EU and US East Coast working hours for live calls.</div></div>
+      </div>
+      <div class="exp-row">
+        <div class="yr">Q2</div>
+        <div><div class="role">Fixed-price or retainer?</div><div class="de">Both. Scoped one-off builds are fixed-price; ongoing agent ops work runs as a monthly retainer.</div></div>
+      </div>
+      <div class="exp-row">
+        <div class="yr">Q3</div>
+        <div><div class="role">Do you use my own LLM keys?</div><div class="de">Yes. Your keys (Sarvam, OpenAI, Gemini) stay in your account. I never bill through my own for your production traffic.</div></div>
+      </div>
+      <div class="exp-row">
+        <div class="yr">Q4</div>
+        <div><div class="role">Do you do ongoing support after handoff?</div><div class="de">Yes. Every engagement includes a handoff doc and runbook, and support can be extended on retainer.</div></div>
+      </div>
     </section>
 
     <footer>
